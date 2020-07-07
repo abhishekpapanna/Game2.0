@@ -1,10 +1,11 @@
 #include "olcPixelGameEngine.h"
 #include "pixelgeinterface.h"
 
+PixelGEinterface * Game = new PixelGEinterface();
+
 int main()
 {
-    PixelGEinterface game;
-    if (game.Construct(800,600,2,2))
-        game.Start();
+    if (Game->Construct(640,480,2,2))
+        Game->Start();
     return 0;
 }
