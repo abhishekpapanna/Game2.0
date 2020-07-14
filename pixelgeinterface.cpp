@@ -2,6 +2,7 @@
 #include "olcPixelGameEngine.h"
 
 #include "pixelgeinterface.h"
+#include "bullet.h"
 
 PixelGEinterface::PixelGEinterface()
 {
@@ -16,22 +17,29 @@ bool PixelGEinterface::OnUserCreate()
     bgdecal = new olc::Decal(bg);
     player = new olc::Sprite("./img/player.png");
     playerdecal = new olc::Decal(player);
+    bullet = new olc::Sprite("./img/bullet.png");
+    bulletdecal = new olc::Decal(bullet);
     playerPos = objPlayer->getPos();
+
+    for (int i = 190; i > 150; i-=0.01){
+        Clear(olc::DARK_BLUE);
+        DrawDecal({playerPos,float(ScreenHeight())-i},playerdecal);
+    }
+
     return true;
 }
 
 bool PixelGEinterface::OnUserUpdate(float fElapsedTime)
 {
-    //Defining user inputs
+    if (GetKey(olc::Key::SPACE).bPressed){
+        bulletobj = new Bullet();
+        objPlayer->createbul();
+    }
+
+    //Defining user inputs moved into the method
     //Gets player position for the current frame
-   /* if (GetKey(olc::Key::LEFT).bHeld) playerPos -= playerSpeed;
-    if (GetKey(olc::Key::RIGHT).bHeld) playerPos += playerSpeed;
-
-
-    if (playerPos < 11.0f) playerPos = 11.0f;
-    if (playerPos + playerWidth > float(ScreenWidth()) - 10.0f) playerPos = float(ScreenWidth()) - 10.0f - playerWidth;
-    //if (playerPos + playerWidth < float(ScreenWidth()) + 10.0f) playerPos = float(ScreenWidth()) + 10.0f + playerWidth; */
     playerPos = objPlayer->updatePos();
+
 
     //clear previous frame
     Clear(olc::DARK_BLUE);
@@ -39,6 +47,11 @@ bool PixelGEinterface::OnUserUpdate(float fElapsedTime)
     //Draw the frame
     DrawDecal({float(0),float(0)},bgdecal);
     DrawDecal({playerPos,float(ScreenHeight()-150)},playerdecal);
+    if (bulletobj != nullptr){
+    //if (GetKey(olc::Key::SPACE).bHeld){
+        objPlayer->spawn();
+    }
 
     return true;
 }
+
